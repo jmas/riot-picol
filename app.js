@@ -1,34 +1,68 @@
-(function() {
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-  riot.mount('app', {
-    items: [
-        { url: 'images/1.jpg', palette: [{ color: 'ff0000', name: 'Red' }, { color: '0000ff', name: 'Blue' }, { color: 'ffff00', name: 'Yellow' }] },
-        { url: 'images/1.jpg', palette: [{ color: 'ff0000', name: 'Red' }, { color: '0000ff', name: 'Blue' }, { color: 'ffff00', name: 'Yellow' }] },
-        { url: 'images/1.jpg', palette: [{ color: '00ff00', name: 'Red' }, { color: '000000', name: 'Black' }, { color: 'ffa500', name: 'Orange' }] },
-        { url: 'images/1.jpg', palette: [{ color: 'ff0000', name: 'Red' }, { color: '0000ff', name: 'Blue' }, { color: 'ffff00', name: 'Yellow' }] },
-        { url: 'images/1.jpg', palette: [{ color: 'ff0000', name: 'Red' }, { color: '0000ff', name: 'Blue' }, { color: 'ffff00', name: 'Yellow' }] },
-        { url: 'images/1.jpg', palette: [{ color: 'ff0000', name: 'Red' }, { color: '0000ff', name: 'Blue' }, { color: 'ffff00', name: 'Yellow' }] }
-    ]
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var multer = require('multer');
+
+var app = express();
+
+app.use(multer({
+  dest: path.join(__dirname, 'public', 'images'),
+  rename: function (fieldname, filename) {
+    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+  }
+}))
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', routes);
+app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
   });
+}
 
-  riot.util.color = {
-    makeContrastColor: function(color) {
-      return (this.luma(color) >= 165) ? '000' : 'fff';
-    },
-    luma: function(color) {
-      var rgb = (typeof color === 'string') ? this.hexToRGBArray(color) : color;
-      return (0.2126 * rgb[0]) + (0.7152 * rgb[1]) + (0.0722 * rgb[2]); // SMPTE C, Rec. 709 weightings
-    },
-    hexToRGBArray: function(color) {
-      if (color.length === 3)
-          color = color.charAt(0) + color.charAt(0) + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2);
-      else if (color.length !== 6)
-          throw('Invalid hex color: ' + color);
-      var rgb = [];
-      for (var i = 0; i <= 2; i++)
-          rgb[i] = parseInt(color.substr(i * 2, 2), 16);
-      return rgb;
-    }
-  };
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
-})();
+
+module.exports = app;
