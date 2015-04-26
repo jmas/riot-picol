@@ -4,6 +4,7 @@ RiotJS app example: Grab palette of colors from image.
 # install
 ```
 npm i
+cd public/ && bower i
 ```
 
 # run
