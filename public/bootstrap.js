@@ -2,19 +2,8 @@
 
   var config = {
     imageUploadUrl: '/image/upload',
-    defaultRoute: 'image/all',
-    helpers: [
-      'color', 'ui', 'router'
-    ]
+    defaultRoute: 'image/all'
   };
-
-  var filesToRequire = ['riot', 'tags'];
-  var argsShift = filesToRequire.length;
-  var helpersToRequire = [];
-  for (var i=0,ln=config.helpers.length; i<ln; i++) {
-    helpersToRequire.push('helpers/' + config.helpers[i]);
-    filesToRequire.push('helpers/' + config.helpers[i]);
-  }
 
   // configure requirejs
   requirejs.config({
@@ -36,24 +25,29 @@
     },
     shim: {
       tags: {
-        deps: helpersToRequire
+        // this definition is required because helpers are used by tags
+        deps: ['helpers/ui', 'helpers/router', 'helpers/color']
       }
     }
   });
 
   // main definition
-  require(filesToRequire, function(riot, tags) {
-    // app point for tags events
+  require(['riot', 'tags', 'helpers/ui', 'helpers/router', 'helpers/color'],
+          function(riot, tags, uiHelper, routerHelper, colorHelper) {
+    // app point for dispatch events
     riot.app = riot.observable();
 
-    // append helpers
-    riot.app.helpers = {};
-    for (var i=0,ln=config.helpers.length; i<ln; i++) {
-      riot.app.helpers[config.helpers[i]] = arguments[i+argsShift];
-    }
+    // assign helpers
+    riot.app.helpers = {
+      ui: uiHelper,
+      router: routerHelper,
+      color: colorHelper
+    };
 
+    // assign config
     riot.app.config = config;
 
+    // watch dialigs
     watchDialogsToControlScroll(riot);
 
     // mount app

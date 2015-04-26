@@ -11,10 +11,14 @@ define(['riot'], function(riot) {
     },
     //
     dispatch: function(collection, action, id) {
+      // check collection
       if (! collection) {
+        if (! 'app' in riot) {
+          return console.log('You need to define riot.app.config.defaultRoute.');
+        }
         return riot.route(riot.app.config.defaultRoute);
       }
-      //
+      // make new element
       var tagName = collection + '-page';
       var el = document.createElement(tagName);
       viewportEl.appendChild(el);
@@ -28,6 +32,9 @@ define(['riot'], function(riot) {
       mountedTags = riot.mount(tagName);
       if (mountedTags.length === 0) {
         return router.dispatch('not-found');
+      }
+      if ('app' in riot) {
+        riot.app.trigger('route:' + collection, action, id);
       }
     }
   };
