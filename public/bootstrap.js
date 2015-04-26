@@ -3,16 +3,16 @@
   // app config
   var config = {
     imageUploadUrl: '/image/upload',
-    defaultRoute: 'image/all'
+    defaultRoute:   'image/all'
   };
 
-  // configure requirejs
+  // requirejs config
   requirejs.config({
     paths: {
       // core components
       riot:                 './bower_components/riot/riot.min',
       tags:                 './tags',
-      // components include dirs
+      // dirs of app components
       helpers:              './helpers',
       stores:               './stores',
       services:             './services',
@@ -33,39 +33,39 @@
     }
   });
 
-  // main definition
+  // main: include and run
   require(['riot', 'tags', 'helpers/ui', 'helpers/router', 'helpers/color'],
           function(riot, tags, uiHelper, routerHelper, colorHelper) {
     // app point for dispatch events
     riot.app = riot.observable();
 
-    // assign helpers
-    riot.app.helpers = {
-      ui: uiHelper,
-      router: routerHelper,
-      color: colorHelper
-    };
-
     // assign config
     riot.app.config = config;
 
-    // watch dialigs
+    // assign helpers
+    riot.app.helpers = {
+      ui:     uiHelper,
+      router: routerHelper,
+      color:  colorHelper
+    };
+
+    // other: watch dialigs
     watchDialogsToControlScroll(riot);
 
     // mount app
     riot.mount('app');
   });
 
-  // when we have more that one opened dialog we block scrolling
+  // other: when we have more that one opened dialog we block scrolling
   function watchDialogsToControlScroll(riot) {
     var openedDialogsCount = 0;
     var bodyEl = document.getElementsByTagName('BODY')[0];
-
+    // watch open
     riot.app.on('dialog:opened', function() {
       openedDialogsCount++;
       bodyEl.classList.add('app-dialog-opened');
     });
-
+    // watch close
     riot.app.on('dialog:closed', function() {
       openedDialogsCount--;
       if (openedDialogsCount === 0) {
@@ -74,7 +74,7 @@
     });
   }
 
-  // dummy for JSData
+  // other: dummy for JSData
   define('js-data-schema', [], function () { return undefined; });
   define('bluebird', [], function () { return undefined; });
 
