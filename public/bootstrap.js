@@ -1,5 +1,6 @@
 (function() {
 
+  // app config
   var config = {
     imageUploadUrl: '/image/upload',
     defaultRoute: 'image/all'
@@ -25,7 +26,8 @@
     },
     shim: {
       tags: {
-        // this definition is required because helpers are used by tags
+        // this definition is required because helpers are used by tags.
+        // we should load helpers before tags
         deps: ['helpers/ui', 'helpers/router', 'helpers/color']
       }
     }
