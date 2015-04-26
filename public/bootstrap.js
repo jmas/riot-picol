@@ -34,7 +34,7 @@
   });
 
   // main: include and run
-  require(['riot', 'tags', 'helpers/ui', 'helpers/router', 'helpers/color'],
+  define(['riot', 'tags', 'helpers/ui', 'helpers/router', 'helpers/color'],
           function(riot, tags, uiHelper, routerHelper, colorHelper) {
     // app point for dispatch events
     riot.app = riot.observable();
@@ -54,6 +54,8 @@
 
     // mount app
     riot.mount('app');
+
+    return riot;
   });
 
   // other: when we have more that one opened dialog we block scrolling

@@ -1,0 +1,34 @@
+{
+  "name": "picol",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jmas/riot-picol",
+  "authors": [
+    "jmas <jmas.ukraine@gmail.com>"
+  ],
+  "description": "picol is riot-js demo application",
+  "main": "bootstrap.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "riotjs",
+    "riot-js",
+    "picol"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "color-thief": "https://github.com/jmas/color-thief.git",
+    "js-data-http": "~1.2.3",
+    "requirejs-plugins": "~1.0.3",
+    "Simple-Ajax-Uploader": "https://github.com/jmas/Simple-Ajax-Uploader.git",
+    "riot": "~2.0.15",
+    "requirejs": "~2.1.17"
+  }
+}
