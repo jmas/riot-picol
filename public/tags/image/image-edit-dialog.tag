@@ -75,7 +75,7 @@
 
   self.on('update', function() {
     if (self.imageUrl) {
-      riot.helpers.color.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
+      riot.app.helpers.color.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
         if (palette === null) {
             return self.update({
               imageUrl: '',

@@ -70,7 +70,7 @@
   });
 
   initUploader() {
-    uploader = new riot.helpers.ui.uploader.SimpleUpload({
+    uploader = new riot.app.helpers.ui.uploader.SimpleUpload({
         button: self.root.querySelector('.upload-file-btn'),
         url: self.imageUploadUrl,
         multipart: true,

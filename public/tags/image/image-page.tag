@@ -10,7 +10,7 @@
   var self = this;
 
   self.items = opts.items || [];
-  self.imageUploadUrl = opts.imageUploadUrl || '/image/upload';
+  self.imageUploadUrl = riot.app.config.imageUploadUrl || '/image/upload';
 
   addImage() {
     self.uploadImage();

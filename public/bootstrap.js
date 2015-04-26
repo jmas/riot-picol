@@ -1,5 +1,21 @@
 (function() {
 
+  var config = {
+    imageUploadUrl: '/image/upload',
+    defaultRoute: 'image/all',
+    helpers: [
+      'color', 'ui', 'router'
+    ]
+  };
+
+  var filesToRequire = ['riot', 'tags'];
+  var argsShift = filesToRequire.length;
+  var helpersToRequire = [];
+  for (var i=0,ln=config.helpers.length; i<ln; i++) {
+    helpersToRequire.push('helpers/' + config.helpers[i]);
+    filesToRequire.push('helpers/' + config.helpers[i]);
+  }
+
   // configure requirejs
   requirejs.config({
     paths: {
@@ -20,31 +36,28 @@
     },
     shim: {
       tags: {
-        deps: ['helpers/color', 'helpers/ui']
+        deps: helpersToRequire
       }
     }
   });
 
   // main definition
-  require(['riot', 'helpers/color', 'helpers/ui', 'tags', 'JSData'],
-         function(riot, colorHelper, uiHelper, tags, JSData) {
-
-    // define helpers
-    riot.helpers = {};
-    riot.helpers.color = colorHelper;
-    riot.helpers.ui = uiHelper;
-
+  require(filesToRequire, function(riot, tags) {
     // app point for tags events
     riot.app = riot.observable();
 
-    riot.app.config = {
-      imageUploadUrl: '/image/upload'
-    };
+    // append helpers
+    riot.app.helpers = {};
+    for (var i=0,ln=config.helpers.length; i<ln; i++) {
+      riot.app.helpers[config.helpers[i]] = arguments[i+argsShift];
+    }
+
+    riot.app.config = config;
 
     watchDialogsToControlScroll(riot);
 
     // mount app
-    riot.mount('layout');
+    riot.mount('app');
   });
 
   // when we have more that one opened dialog we block scrolling

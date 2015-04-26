@@ -7,6 +7,15 @@
     tagger(window.riot);
   }
 })(function(riot) {
+riot.tag('app', '<div class="layout"> <div class="layout-nav"> <a href="#image">Images</a> <a href="#user">User</a> </div>  <div class="layout-content" id="layout-content"></div> </div>', '.layout { overflow: hidden; } .layout-nav { } .layout-side { float: left; width: 20em; margin-right: 2em; } .layout-content { overflow: hidden; }', function(opts) {
+  var self = this;
+
+  self.on('mount', function() {
+    riot.app.helpers.router.startDispatching(this['layout-content']);
+  });
+  
+});
+
 riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ parent.complete }"> <div class="form-error" if="{ parent.error }">{ parent.error }</div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-item" if="{ parent.imageUrl }"> <image-item url="{ parent.imageUrl }" palette="{ parent.imagePalette }"></image-item> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-image-preview { width: 350px; height: 350px; background-position: center; background-repeat: no-repeat; background-size: cover; border: 1px solid #eee; } .form-error { color: red; } .form-image-palette-item { }', function(opts) {
   var self = this;
 
@@ -49,7 +58,7 @@ riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ pare
 
   self.on('update', function() {
     if (self.imageUrl) {
-      riot.helpers.color.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
+      riot.app.helpers.color.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
         if (palette === null) {
             return self.update({
               imageUrl: '',
@@ -76,7 +85,7 @@ riot.tag('image-item', '<div class="image-item"> <div class="image-preview" riot
 
   self.on('update', function() {
     self.palette.map(function(item) {
-      item.contrastColor = riot.helpers.color.makeContrastColor(item.color);
+      item.contrastColor = riot.app.helpers.color.makeContrastColor(item.color);
       return item;
     });
   });
@@ -94,7 +103,7 @@ riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <image
   var self = this;
 
   self.items = opts.items || [];
-  self.imageUploadUrl = opts.imageUploadUrl || '/image/upload';
+  self.imageUploadUrl = riot.app.config.imageUploadUrl || '/image/upload';
 
   this.addImage = function() {
     self.uploadImage();
@@ -172,7 +181,7 @@ riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ 
   });
 
   this.initUploader = function() {
-    uploader = new riot.helpers.ui.uploader.SimpleUpload({
+    uploader = new riot.app.helpers.ui.uploader.SimpleUpload({
         button: self.root.querySelector('.upload-file-btn'),
         url: self.imageUploadUrl,
         multipart: true,
@@ -195,32 +204,17 @@ riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ 
   
 });
 
-riot.tag('layout', '<div class="layout"> <div class="layout-nav"> Navigation </div>  <div class="layout-content" id="layout-content"></div> </div>', '.layout { overflow: hidden; } .layout-nav { } .layout-side { float: left; width: 20em; margin-right: 2em; } .layout-content { overflow: hidden; }', function(opts) {
+riot.tag('not-found-page', '<h1>Page not found</h1> <p>Back to <a href="#{ homeRoute }" onclick="{ goHome }">main page</a>.</p>', function(opts) {
   var self = this;
-  self.mountedPage = null;
 
-  this.renderRoute = function(collection, action, id) {
-    if (! collection) {
-      collection = 'image';
-    }
-    var tagName = collection + '-page';
-    var el = document.createElement(tagName);
-    self['layout-content'].appendChild(el);
-    if (self.mountedPage) {
-      for (var i=0,ln=self.mountedPage.length; i<ln; i++) {
-        self.mountedPage[i].unmount(true);
-      }
-    }
-    self.mountedPage = riot.mount(tagName);
-    if (self.mountedPage.length === 0) {
-      console.error('Page not found.');
-    }
+  self.homeRoute = riot.app.config.defaultRoute;
+
+  this.goHome = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    riot.route(self.homeRoute);
   }.bind(this);
-
-  self.on('mount', function() {
-    riot.route(self.renderRoute);
-    riot.route.exec(self.renderRoute);
-  });
   
 });
 

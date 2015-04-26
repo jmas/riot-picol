@@ -38,7 +38,7 @@
 
   self.on('update', function() {
     self.palette.map(function(item) {
-      item.contrastColor = riot.helpers.color.makeContrastColor(item.color);
+      item.contrastColor = riot.app.helpers.color.makeContrastColor(item.color);
       return item;
     });
   });
