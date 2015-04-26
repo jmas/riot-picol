@@ -1,14 +1,14 @@
 {
   "name": "Simple-Ajax-Uploader",
-  "homepage": "https://github.com/LPology/Simple-Ajax-Uploader",
-  "_release": "02aebd726b",
+  "homepage": "https://github.com/jmas/Simple-Ajax-Uploader",
+  "_release": "707ae6282e",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "02aebd726b1c6353dd34fefa1bb4612fbc37ab0b"
+    "commit": "707ae6282e00d962c24c3637128d1447ba67e438"
   },
-  "_source": "git://github.com/LPology/Simple-Ajax-Uploader.git",
+  "_source": "https://github.com/jmas/Simple-Ajax-Uploader.git",
   "_target": "*",
-  "_originalSource": "git://github.com/LPology/Simple-Ajax-Uploader.git",
+  "_originalSource": "https://github.com/jmas/Simple-Ajax-Uploader.git",
   "_direct": true
 }

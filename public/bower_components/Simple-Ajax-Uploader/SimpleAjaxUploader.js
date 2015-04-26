@@ -1841,19 +1841,27 @@ ss.extendObj(ss.SimpleUpload.prototype, {
         elem.ondrop = function( e ) {
             e.preventDefault();
 
-            ss.removeClass( this, self._opts.dragClass );            
-            
+            ss.removeClass( this, self._opts.dragClass );
+
             if ( !self._dragFileCheck( e ) ) {
                 return false;
             }
 
             self._addFiles( e.dataTransfer.files );
-            self._cycleQueue();            
+            self._cycleQueue();
         };
     }
 });
 
 // Expose to the global window object
-window.ss = ss;
+if (typeof define !== 'undefined') {
+  define(function() { return ss; }); // RequireJS
+} else if (typeof module !== 'undefined') {
+  module.exports = ss; // NodeJS
+} else if (typeof window !== 'undefined') {
+  window['ss'] = ss;
+} else {
+  throw new Error('Can\'t export Simple Ajax Uploader.');
+}
 
 })( window, document );

@@ -1,4 +1,4 @@
-<edit-image-dialog>
+<image-edit-dialog>
   <ui-dialog t="Edit Image">
     <form onsubmit={ parent.complete }>
       <div class="form-error" if={ parent.error }>{ parent.error }</div>
@@ -92,4 +92,4 @@
     }
   });
   </script>
-</edit-image-dialog>
+</image-edit-dialog>

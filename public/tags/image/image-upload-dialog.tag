@@ -1,4 +1,4 @@
-<upload-image-dialog>
+<image-upload-dialog>
   <ui-dialog t="Upload Image">
     <form onsubmit={ parent.complete }>
       <div class="form-item">
@@ -70,7 +70,7 @@
   });
 
   initUploader() {
-    uploader = new ss.SimpleUpload({
+    uploader = new riot.helpers.ui.uploader.SimpleUpload({
         button: self.root.querySelector('.upload-file-btn'),
         url: self.imageUploadUrl,
         multipart: true,
@@ -91,4 +91,4 @@
     });
   }
   </script>
-</upload-image-dialog>
+</image-upload-dialog>

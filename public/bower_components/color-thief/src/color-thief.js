@@ -15,6 +15,7 @@
  *
  */
 
+ (function() { // closure
 
 /*
   CanvasImage Class
@@ -607,3 +608,16 @@ var MMCQ = (function() {
         quantize: quantize
     };
 })();
+
+// export ColorThief
+if (typeof define !== 'undefined') {
+  define(function() { return ColorThief; }); // RequireJS
+} else if (typeof module !== 'undefined') {
+  module.exports = ColorThief; // NodeJS
+} else if (typeof window !== 'undefined') {
+  window['ColorThief'] = ColorThief;
+} else {
+  throw new Error('Can\'t export ColorThief.');
+}
+
+})(); // end closure
