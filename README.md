@@ -5,28 +5,28 @@ RiotJS app example: Grab palette of colors from image.
 Install nodejs and bower components.
 ```
 npm i
-cd public/ && bower i
 ```
 
 # development
+Install Riot globally first.
 ```
-npm i riot -g
+sudo npm i riot -g
 ```
 Start watching `public/tags/*` for changes and auto build `public/tags.js`.
 ```
-riot -w -m public/tags/ public/tags.js
+npm run watch-tags
 ```
 Run server in development mode.
 ```
-node bin/www
+npm run start
 ```
 
 # production
 Make `build` folder.
 ```
-r.js -o build.js
+npm run build
 ```
 Run server in production mode.
 ```
-NODE_ENV=production node bin/www
+npm run start-prod
 ```

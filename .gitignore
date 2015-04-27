@@ -1,6 +1,6 @@
-.env
 public/images/*
 node_modules/*
 public/bower_components/*
 public/build.js
 build/*
+*.log
