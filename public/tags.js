@@ -102,16 +102,18 @@ riot.tag('image-item', '<div class="image-item"> <div class="image-preview"> <im
   
 });
 
-riot.tag('image-list', '<div class="image-list"> <image-item each="{ items }" url="{ url }" palette="{ palette }"></image-item> </div>', '.image-list { /*overflow: hidden;*/ text-align: center; } .image-list .image-item { display: inline-block; vertical-align: top; margin: 1em; text-align: left; } @media only screen and (max-device-width: 50em) { .image-list .image-item { display: block; } }', function(opts) {
+riot.tag('image-list', '<div class="image-list-empty" if="{ items.length === 0}"> Empty. </div> <div class="image-list" if="{ items.length > 0 }"> <image-item each="{ items }" url="{ url }" palette="{ palette }"></image-item> </div>', '.image-list { /*overflow: hidden;*/ text-align: center; } .image-list .image-item { display: inline-block; vertical-align: top; margin: 1em; text-align: left; } .image-list-empty { margin-top: 1em; margin-bottom: 1em; padding: 1em; color: #888; border: 1px solid #eee; background-color: #fff; border-radius: .25em; text-align: center; } @media only screen and (max-device-width: 50em) { .image-list .image-item { display: block; } }', function(opts) {
   var self = this;
 
   self.items = opts.items || [];
   
 });
 
-riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <image-list items="{ items }"></image-list> <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', function(opts) {
+riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div class="image-page-error" if="{ error }"> { error } </div> <image-list items="{ items }" if="{ ! error }"></image-list> <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', '.image-page-error { margin-top: 1em; margin-bottom: 1em; padding: 1em; color: red; border: 1px solid red; background-color: #fff; border-radius: .25em; text-align: center; }', function(opts) {
   var self = this;
+  var imageService = require('services/image');
 
+  self.error = null;
   self.items = opts.items || [];
   self.imageUploadUrl = '/image/upload';
 
@@ -136,11 +138,17 @@ riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <image
   });
 
   self.on('mount', function() {
-    require(['items-data'], function(data) {
-      self.tags['image-list'].update({
-        items: data.items
-      });
-    });
+    imageService.findAll()
+                .then(function(items) {
+                  self.tags['image-list'].update({
+                    items: items
+                  });
+                })
+                .catch(function(e) {
+                  self.update({
+                    error: 'Can\'t load data from server.'
+                  });
+                });
   });
   
 });
@@ -303,6 +311,7 @@ riot.tag('ui-router', '', function(opts) {
         throw new Error('Tag with name not-found-page is required for displaying Not Found page.');
       }
     }
+
     if ('app' in riot) {
       riot.app.trigger('route.' + collection, action, id);
       riot.app.trigger('route', collection, action, id);

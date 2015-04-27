@@ -33,6 +33,7 @@
         throw new Error('Tag with name not-found-page is required for displaying Not Found page.');
       }
     }
+    // trigger global event for notify app components
     if ('app' in riot) {
       riot.app.trigger('route.' + collection, action, id);
       riot.app.trigger('route', collection, action, id);

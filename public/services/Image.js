@@ -1,14 +1,14 @@
-define(['stores/Image'], function(ImageStore) {
+define(['stores/image'], function(imageStore) {
 
   var service = {
     findAll: function() {
-      return ImageStore.findAll();
+      return imageStore.findAll();
     },
     find: function(id) {
-      return ImageStore.find();
+      return imageStore.find();
     },
     remove: function(id) {
-      return ImageStore.destroy(id);
+      return imageStore.destroy(id);
     },
     save: function(data) {
 
