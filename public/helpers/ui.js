@@ -1,8 +1,7 @@
 define(['simpleAjaxUploader'], function(simpleAjaxUploader) {
-  var ui = {};
-
-  // assign ajax uploader
-  ui.uploader = simpleAjaxUploader;
+  var ui = {
+    FileUploader: simpleAjaxUploader.SimpleUpload
+  };
 
   return ui;
 });

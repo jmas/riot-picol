@@ -10,7 +10,7 @@
   var self = this;
 
   self.items = opts.items || [];
-  self.imageUploadUrl = riot.app.config.imageUploadUrl || '/image/upload';
+  self.imageUploadUrl = '/image/upload';
 
   addImage() {
     self.uploadImage();
@@ -33,9 +33,9 @@
   });
 
   self.on('mount', function() {
-    require(['json!items-data.json'], function(items) {
+    require(['items-data'], function(data) {
       self.tags['image-list'].update({
-        items: items
+        items: data.items
       });
     });
   });

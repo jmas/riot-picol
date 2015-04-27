@@ -20,6 +20,8 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     background-color: rgba(0, 0, 0, .5);
   }
 
@@ -65,10 +67,20 @@
   .dialog-content {
     padding: 1em;
   }
+
+  @media only screen and (max-device-width: 50em) {
+    .dialog-box {
+      margin-top: 0;
+      margin-bottom: 0;
+      border-radius: 0;
+      min-height: 100%;
+    }
+  }
   </style>
 
   <script>
   var self = this;
+
 
   self.showed = opts.showed || false;
   self.title = opts.t || '';
@@ -85,6 +97,22 @@
     if ('app' in riot) {
       riot.app.trigger('dialog:closed');
     }
+  }
+
+  prevent(event) {
+    event.stopPropagation();
+    // console.log(self.root);
+    // self.root.addEventListener('touchmove', function(event){
+    //     event.stopPropagation();
+    // });
+    // var dialogEl = self.root;
+    // var preventScrollHandler = function(e) {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+    // };
+    // //
+    // dialogEl.addEventListener('touchmove', preventScrollHandler);
+    // dialogEl.addEventListener('touchstart', preventScrollHandler);
   }
   </script>
 </ui-dialog>

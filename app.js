@@ -11,8 +11,15 @@ var multer = require('multer');
 
 var app = express();
 
+console.log('Current env: ', app.get('env'));
+
+var publicDirName = 'public';
+if (app.get('env') === 'production') {
+  publicDirName = 'build';
+}
+
 app.use(multer({
-  dest: path.join(__dirname, 'public', 'images'),
+  dest: path.join(__dirname, publicDirName, 'images'),
   rename: function (fieldname, filename) {
     return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
   }
@@ -28,7 +35,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, publicDirName)));
 
 app.use('/', routes);
 app.use('/users', users);

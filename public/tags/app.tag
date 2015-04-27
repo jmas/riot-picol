@@ -1,40 +1,41 @@
 <app>
-  <div class="layout">
-    <div class="layout-nav">
+  <div class="app">
+    <div class="app-nav">
       <a href="#image">Images</a>
       <a href="#user">User</a>
     </div>
-    <!--<div class="layout-side">
+    <!--<div class="app-side">
       Sidebar
     </div>-->
-    <div class="layout-content" id="layout-content"></div>
+    <div class="app-content">
+      <ui-router></ui-router>
+    </div>
   </div>
 
   <style>
-  .layout {
+  .app {
     overflow: hidden;
   }
 
-  .layout-nav {
-
+  .app-nav {
+    padding: 1em;
+    background-color: #fff;
   }
 
-  .layout-side {
+  .app-nav a {
+    margin-left: .5em;
+    margin-right: .5em;
+  }
+
+  .app-side {
     float: left;
     width: 20em;
     margin-right: 2em;
   }
 
-  .layout-content {
+  .app-content {
     overflow: hidden;
+    padding: 1em;
   }
   </style>
-
-  <script>
-  var self = this;
-
-  self.on('mount', function() {
-    riot.app.helpers.router.startDispatching(this['layout-content']);
-  });
-  </script>
 </app>

@@ -1,4 +1,4 @@
-[
+define({ items: [
     {
       "url": "images/1.jpg",
       "palette": [
@@ -48,4 +48,4 @@
         { "color": "ffff00", "name": "Yellow" }
       ]
     }
-]
+]});

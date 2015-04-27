@@ -4,8 +4,9 @@
 
   <script>
   var self = this;
+  var config = require('config');
 
-  self.homeRoute = riot.app.config.defaultRoute;
+  self.homeRoute = config.defaultRoute;
 
   goHome(e) {
     e.preventDefault();

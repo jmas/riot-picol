@@ -3,20 +3,20 @@ define(['riot'], function(riot) {
   var mountedTags = null;
 
   var router = {
-    //
+    // start dispatching process
     startDispatching: function(el) {
       viewportEl = el;
       riot.route(router.dispatch);
       riot.route.exec(router.dispatch);
     },
-    //
+    // dispatch route
     dispatch: function(collection, action, id) {
       // check collection
       if (! collection) {
         if (! 'app' in riot) {
           return console.log('You need to define riot.app.config.defaultRoute.');
         }
-        return riot.route(riot.app.config.defaultRoute);
+        return riot.route('image/all');
       }
       // make new element
       var tagName = collection + '-page';

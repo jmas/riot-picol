@@ -15,14 +15,14 @@
   </ui-dialog>
 
   <style>
-  .form-image-preview {
+  /*.form-image-preview {
     width: 350px;
     height: 350px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     border: 1px solid #eee;
-  }
+  }*/
 
   .form-error {
     color: red;
@@ -35,6 +35,7 @@
 
   <script>
   var self = this;
+  var colorHelper = require('helpers/color');
 
   self.imageUrl = opts['image-url'] || null;
   self.imagePalette = opts['palette'] || [];
@@ -75,7 +76,7 @@
 
   self.on('update', function() {
     if (self.imageUrl) {
-      riot.app.helpers.color.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
+      colorHelper.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
         if (palette === null) {
             return self.update({
               imageUrl: '',

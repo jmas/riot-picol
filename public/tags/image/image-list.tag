@@ -15,6 +15,12 @@
     margin: 1em;
     text-align: left;
   }
+
+  @media only screen and (max-device-width: 50em) {
+    .image-list .image-item {
+      display: block;
+    }
+  }
   </style>
 
   <script>

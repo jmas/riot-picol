@@ -15,18 +15,24 @@
 
   <style>
   .form-image-preview {
-    width: 350px;
+    width: 360px;
+    /*width: auto;
     height: 350px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    border: 1px solid #eee;
+    border: 1px solid #eee;*/
+  }
+
+  .form-image-preview img {
+    width: 100%;
   }
   </style>
 
   <script>
   var self = this;
   var uploader = null;
+  var uiHelper = require('helpers/ui');
 
   self.fileName = opts['data'] ? opts['data'].fileName: null;
   self.imageUploadUrl = opts['image-upload-url'] || '/image/upload';
@@ -58,7 +64,7 @@
   self.on('updated', function() {
     if (self.fileName) {
       var imagePreviewEl = self.root.querySelector('.form-image-preview');
-      imagePreviewEl.style.backgroundImage = 'url("/images/' + self.fileName + '")';
+      imagePreviewEl.innerHTML = '<img src="/images/' + self.fileName + '" />';
     }
     if (self.tags['ui-dialog'].showed) {
       self.root.querySelector('.form-submit-btn').disabled = (self.inProgress ? true: false);
@@ -70,7 +76,7 @@
   });
 
   initUploader() {
-    uploader = new riot.app.helpers.ui.uploader.SimpleUpload({
+    uploader = new uiHelper.FileUploader({
         button: self.root.querySelector('.upload-file-btn'),
         url: self.imageUploadUrl,
         multipart: true,
