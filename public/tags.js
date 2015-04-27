@@ -7,8 +7,17 @@
     tagger(window.riot);
   }
 })(function(riot) {
-riot.tag('app', '<div class="app"> <div class="app-nav"> <a href="#image">Images</a> <a href="#user">User</a> </div>  <div class="app-content"> <ui-router></ui-router> </div> </div>', '.app { overflow: hidden; } .app-nav { padding: 1em; background-color: #fff; } .app-nav a { margin-left: .5em; margin-right: .5em; } .app-side { float: left; width: 20em; margin-right: 2em; } .app-content { overflow: hidden; padding: 1em; }', function(opts) {
+riot.tag('app', '<div class="app"> <div class="app-header"> <div class="app-nav"> <a href="#image" class="{ \'app-nav-item-active\': currentCollection == \'image\' }">Images</a> <a href="#user" class="{ \'app-nav-item-active\': currentCollection == \'user\' }">User</a> </div> </div>  <div class="app-content"> <ui-router></ui-router> </div> </div>', '.app { overflow: hidden; } .app-header { padding: 1em; background-color: #fff; border-bottom: 1px solid #eee; line-height: 1em; } .app-nav { font-weight: bold; } .app-nav a { display: inline-block; padding: .5em; } .app-nav-item-active { color: #444; } .app-side { float: left; width: 20em; margin-right: 2em; } .app-content { overflow: hidden; padding: 1em; }', function(opts) {
+  var self = this;
 
+  self.currentCollection = null;
+
+  riot.app.on('route', function(collection, action, id) {
+    self.update({
+      currentCollection: collection
+    });
+  });
+  
 });
 
 riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ parent.complete }"> <div class="form-error" if="{ parent.error }">{ parent.error }</div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-item" if="{ parent.imageUrl }"> <image-item url="{ parent.imageUrl }" palette="{ parent.imagePalette }"></image-item> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '/*.form-image-preview { width: 350px; height: 350px; background-position: center; background-repeat: no-repeat; background-size: cover; border: 1px solid #eee; }*/ .form-error { color: red; } .form-image-palette-item { }', function(opts) {
@@ -295,7 +304,8 @@ riot.tag('ui-router', '', function(opts) {
       }
     }
     if ('app' in riot) {
-      riot.app.trigger('route:' + collection, action, id);
+      riot.app.trigger('route.' + collection, action, id);
+      riot.app.trigger('route', collection, action, id);
     }
   }.bind(this);
 

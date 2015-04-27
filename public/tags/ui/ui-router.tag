@@ -34,7 +34,8 @@
       }
     }
     if ('app' in riot) {
-      riot.app.trigger('route:' + collection, action, id);
+      riot.app.trigger('route.' + collection, action, id);
+      riot.app.trigger('route', collection, action, id);
     }
   }
 
