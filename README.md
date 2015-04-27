@@ -18,7 +18,11 @@ npm run watch-tags
 ```
 Run server in development mode.
 ```
-npm run start
+npm run server-dev
+```
+Optional: Start [localtunnel](http://localtunnel.me/) if you have it already installed.
+```
+npm run lt
 ```
 
 # production
@@ -28,5 +32,5 @@ npm run build
 ```
 Run server in production mode.
 ```
-npm run start-prod
+npm run server-prod
 ```
