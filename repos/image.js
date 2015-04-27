@@ -2,9 +2,21 @@ var store = require('../mongo-store');
 
 module.exports = store.defineResource({
   name: 'image',
-  // Why couldn't Mongo just use "id"?
   idAttribute: '_id',
 
-  // map this resource to a collection, default is Resource#name
-  table: 'image'
+  schema: {
+    url: {
+      type: 'string',
+      maxLength: 255,
+      nullable: false
+    },
+    palette: {
+      type: 'array',
+      nullable: false
+    },
+    createAt: {
+      type: 'date',
+      nullable: false
+    }
+  }
 });

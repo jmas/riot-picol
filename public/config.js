@@ -1,4 +1,5 @@
 define({
-  "imageUploadUrl": "/image/upload",
-  "defaultRoute":   "image/all"
+  imageUploadUrl: '/image/upload',
+  defaultRoute: 'image/all',
+  imagesUploadsPath: './uploads/images'
 });

@@ -20,12 +20,12 @@ riot.tag('app', '<div class="app"> <div class="app-header"> <div class="app-nav"
   
 });
 
-riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ parent.complete }"> <div class="form-error" if="{ parent.error }">{ parent.error }</div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-item" if="{ parent.imageUrl }"> <image-item url="{ parent.imageUrl }" palette="{ parent.imagePalette }"></image-item> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-error { color: red; }', function(opts) {
+riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ parent.complete }"> <div class="form-error" if="{ parent.error }">{ parent.error }</div> <div class="form-item" if="{ parent.url }"> <div class="form-image-preview"></div> </div> <div class="form-item" if="{ parent.url }"> <image-item url="{ parent.url }" palette="{ parent.palette }"></image-item> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-error { color: red; }', function(opts) {
   var self = this;
   var colorHelper = require('helpers/color');
 
-  self.imageUrl = opts['image-url'] || null;
-  self.imagePalette = opts['palette'] || [];
+  self.url = opts['url'] || null;
+  self.palette = opts['palette'] || [];
   self.error = null;
 
   this.open = function(newOpts) {
@@ -37,8 +37,8 @@ riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ pare
       self.update(newOpts);
     } else {
       self.upade({
-        imageUrl: '',
-        imagePalette: []
+        url: '',
+        palette: []
       });
     }
   }.bind(this);
@@ -53,28 +53,28 @@ riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ pare
 
     self.close();
 
-    if (self.imageUrl) {
+    if (self.url) {
       self.trigger('completed', {
-        imageUrl: self.imageUrl,
-        imagePalette: self.imagePalette
+        url: self.url,
+        palette: self.palette
       });
     }
   }.bind(this);
 
   self.on('update', function() {
-    if (self.imageUrl) {
-      colorHelper.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
+    if (self.url) {
+      colorHelper.getImagePaletteByUrl(self.url, 5, function(palette) {
         if (palette === null) {
             return self.update({
-              imageUrl: '',
-              imagePalette: [],
+              url: '',
+              palette: [],
               error: 'Can\'t extract palette from current image.'
             });
         }
-        self.imagePalette = palette;
+        self.palette = palette;
         self.tags['ui-dialog'].tags['image-item'].update({
-          url: self.imageUrl,
-          palette: self.imagePalette
+          url: self.url,
+          palette: self.palette
         });
       });
     }
@@ -118,14 +118,15 @@ riot.tag('image-list', '<div class="ui-message" if="{ message }">{ message }</di
   
 });
 
-riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div class="ui-loading" if="{ loading }"></div> <div class="ui-message" if="{ error }">{ error }</div> <div if="{ ! loading && ! error }"> <image-list items="{ items }"></image-list> </div> <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', function(opts) {
+riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div class="ui-loading" if="{ loading }"></div> <div class="ui-message" if="{ error }">{ error }</div> <div if="{ ! loading && ! error }"> <image-list items="{ items }"></image-list> </div> <image-upload-dialog upload-url="{ uploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', function(opts) {
   var self = this;
   var imageService = require('services/image');
+  var config = require('config');
 
   self.error = null;
   self.loading = false;
   self.items = opts.items || [];
-  self.imageUploadUrl = '/image/upload';
+  self.uploadUrl = config.imageUploadUrl || '/image/upload';
 
   this.addImage = function() {
     self.uploadImage();
@@ -137,18 +138,11 @@ riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div c
   }.bind(this);
 
   self.tags['image-upload-dialog'].on('completed', function(data) {
-    self.tags['image-edit-dialog'].open({
-      imageUrl: '/images/' + data.fileName,
-      imagePalette: []
-    });
+    self.tags['image-edit-dialog'].open(data);
   });
 
   self.tags['image-edit-dialog'].on('completed', function(data) {
-    var dataToSave = {
-      url: data.imageUrl,
-      palette: data.imagePalette
-    };
-    imageService.save(dataToSave)
+    imageService.save(data)
                 .then(function(item) {
                   self.items.unshift(item);
                   self.update();
@@ -189,13 +183,13 @@ riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div c
   
 });
 
-riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ parent.complete }"> <div class="form-item"> <button class="upload-file-btn">Choose File</button> </div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-image-preview { width: 360px; } .form-image-preview img { width: 100%; }', function(opts) {
+riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ parent.complete }"> <div class="form-item"> <button class="upload-file-btn">Choose File</button> </div> <div class="form-item" if="{ parent.url }"> <div class="form-image-preview"></div> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-image-preview { width: 360px; } .form-image-preview img { width: 100%; }', function(opts) {
   var self = this;
   var uploader = null;
   var uiHelper = require('helpers/ui');
 
-  self.fileName = opts['data'] ? opts['data'].fileName: null;
-  self.imageUploadUrl = opts['image-upload-url'] || '/image/upload';
+  self.url = opts['data'] ? opts['data'].url: null;
+  self.uploadUrl = opts['upload-url'] || '/image/upload';
   self.inProgress = false;
 
   this.open = function() {
@@ -210,21 +204,19 @@ riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ 
     event.preventDefault();
     event.stopPropagation();
 
-    var data = {
-      fileName: self.fileName
-    };
-
-    if (self.fileName) {
-      self.trigger('completed', data);
+    if (self.url) {
+      self.trigger('completed', {
+        url: self.url
+      });
     }
 
     self.close();
   }.bind(this);
 
   self.on('updated', function() {
-    var imagePreviewEl = self.root.querySelector('.form-image-preview');
-    if (self.fileName && imagePreviewEl) {
-      imagePreviewEl.innerHTML = '<img src="/images/' + self.fileName + '" />';
+    var previewEl = self.root.querySelector('.form-image-preview');
+    if (self.url && previewEl) {
+      previewEl.innerHTML = '<img src="' + self.url + '" />';
     }
     if (self.tags['ui-dialog'].showed) {
       self.root.querySelector('.form-submit-btn').disabled = (self.inProgress ? true: false);
@@ -238,13 +230,13 @@ riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ 
   this.initUploader = function() {
     uploader = new uiHelper.FileUploader({
         button: self.root.querySelector('.upload-file-btn'),
-        url: self.imageUploadUrl,
+        url: self.uploadUrl,
         multipart: true,
         responseType: 'json',
 
         onComplete: function(filename, response, uploadBtn) {
           self.update({
-            fileName: response.result.name,
+            url: response.result.url,
             inProgress: false
           });
         },

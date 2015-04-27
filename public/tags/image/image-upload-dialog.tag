@@ -4,7 +4,7 @@
       <div class="form-item">
         <button class="upload-file-btn">Choose File</button>
       </div>
-      <div class="form-item" if={ parent.fileName }>
+      <div class="form-item" if={ parent.url }>
         <div class="form-image-preview"></div>
       </div>
       <div class="form-buttons">
@@ -28,8 +28,8 @@
   var uploader = null;
   var uiHelper = require('helpers/ui');
 
-  self.fileName = opts['data'] ? opts['data'].fileName: null;
-  self.imageUploadUrl = opts['image-upload-url'] || '/image/upload';
+  self.url = opts['data'] ? opts['data'].url: null;
+  self.uploadUrl = opts['upload-url'] || '/image/upload';
   self.inProgress = false;
 
   open() {
@@ -44,21 +44,19 @@
     event.preventDefault();
     event.stopPropagation();
 
-    var data = {
-      fileName: self.fileName
-    };
-
-    if (self.fileName) {
-      self.trigger('completed', data);
+    if (self.url) {
+      self.trigger('completed', {
+        url: self.url
+      });
     }
 
     self.close();
   }
 
   self.on('updated', function() {
-    var imagePreviewEl = self.root.querySelector('.form-image-preview');
-    if (self.fileName && imagePreviewEl) {
-      imagePreviewEl.innerHTML = '<img src="/images/' + self.fileName + '" />';
+    var previewEl = self.root.querySelector('.form-image-preview');
+    if (self.url && previewEl) {
+      previewEl.innerHTML = '<img src="' + self.url + '" />';
     }
     if (self.tags['ui-dialog'].showed) {
       self.root.querySelector('.form-submit-btn').disabled = (self.inProgress ? true: false);
@@ -72,13 +70,13 @@
   initUploader() {
     uploader = new uiHelper.FileUploader({
         button: self.root.querySelector('.upload-file-btn'),
-        url: self.imageUploadUrl,
+        url: self.uploadUrl,
         multipart: true,
         responseType: 'json',
         // autoSubmit: false,
         onComplete: function(filename, response, uploadBtn) {
           self.update({
-            fileName: response.result.name,
+            url: response.result.url,
             inProgress: false
           });
         },

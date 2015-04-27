@@ -8,18 +8,36 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var multer = require('multer');
+var compression = require('compression');
+
+var config = require('./config');
 
 var app = express();
 
 console.log('Current env: ', app.get('env'));
 
-var publicDirName = 'public';
+var publicDirName = config.devPublicDirName;
+
+// production
 if (app.get('env') === 'production') {
-  publicDirName = 'build';
+  publicDirName = config.prodPublicDirName;
+
+  // compression
+  app.use(compression({
+    filter: function shouldCompress(req, res) {
+      if (req.headers['x-no-compression']) {
+        // don't compress responses with this request header
+        return false
+      }
+
+      // fallback to standard filter function
+      return compression.filter(req, res)
+    }
+  }));
 }
 
 app.use(multer({
-  dest: path.join(__dirname, publicDirName, 'images'),
+  dest: path.join(__dirname, publicDirName, config.imagesUplodsPath),
   rename: function (fieldname, filename) {
     return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
   }
@@ -54,10 +72,19 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
+    if (req.accepts('json')) {
+      res.json({
+        name: err.name || 'unknown',
+        message: err.message || 'Unknown.',
+        error: err
+      });
+    } else {
+      res.render('error', {
+        name: err.name || 'unknown',
+        message: err.message || 'Unknown.',
+        error: err
+      });
+    }
   });
 }
 
@@ -65,10 +92,19 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  if (req.accepts('json')) {
+    res.json({
+      name: err.name || 'unknown',
+      message: err.message || 'Unknown.',
+      error: err instanceof Error ? {}: err
+    });
+  } else {
+    res.render('error', {
+      name: err.name || 'unknown',
+      message: err.message || 'Unknown.',
+      error: err instanceof Error ? {}: err
+    });
+  }
 });
 
 

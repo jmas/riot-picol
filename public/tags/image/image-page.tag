@@ -8,7 +8,7 @@
     <image-list items={ items }></image-list>
   </div>
 
-  <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog>
+  <image-upload-dialog upload-url="{ uploadUrl }"></image-upload-dialog>
   <image-edit-dialog></image-edit-dialog>
 
   <style>
@@ -17,11 +17,12 @@
   <script>
   var self = this;
   var imageService = require('services/image');
+  var config = require('config');
 
   self.error = null;
   self.loading = false;
   self.items = opts.items || [];
-  self.imageUploadUrl = '/image/upload';
+  self.uploadUrl = config.imageUploadUrl || '/image/upload';
 
   addImage() {
     self.uploadImage();
@@ -33,18 +34,11 @@
   }
 
   self.tags['image-upload-dialog'].on('completed', function(data) {
-    self.tags['image-edit-dialog'].open({
-      imageUrl: '/images/' + data.fileName,
-      imagePalette: []
-    });
+    self.tags['image-edit-dialog'].open(data);
   });
 
   self.tags['image-edit-dialog'].on('completed', function(data) {
-    var dataToSave = {
-      url: data.imageUrl,
-      palette: data.imagePalette
-    };
-    imageService.save(dataToSave)
+    imageService.save(data)
                 .then(function(item) {
                   self.items.unshift(item);
                   self.update();

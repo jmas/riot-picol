@@ -2,11 +2,11 @@
   <ui-dialog t="Edit Image">
     <form onsubmit={ parent.complete }>
       <div class="form-error" if={ parent.error }>{ parent.error }</div>
-      <div class="form-item" if={ parent.fileName }>
+      <div class="form-item" if={ parent.url }>
         <div class="form-image-preview"></div>
       </div>
-      <div class="form-item" if={ parent.imageUrl }>
-        <image-item url={ parent.imageUrl } palette={ parent.imagePalette }></image-item>
+      <div class="form-item" if={ parent.url }>
+        <image-item url={ parent.url } palette={ parent.palette }></image-item>
       </div>
       <div class="form-buttons">
         <input class="form-submit-btn" type="submit" value="Complete" />
@@ -24,8 +24,8 @@
   var self = this;
   var colorHelper = require('helpers/color');
 
-  self.imageUrl = opts['image-url'] || null;
-  self.imagePalette = opts['palette'] || [];
+  self.url = opts['url'] || null;
+  self.palette = opts['palette'] || [];
   self.error = null;
 
   open(newOpts) {
@@ -37,8 +37,8 @@
       self.update(newOpts);
     } else {
       self.upade({
-        imageUrl: '',
-        imagePalette: []
+        url: '',
+        palette: []
       });
     }
   }
@@ -53,28 +53,28 @@
 
     self.close();
 
-    if (self.imageUrl) {
+    if (self.url) {
       self.trigger('completed', {
-        imageUrl: self.imageUrl,
-        imagePalette: self.imagePalette
+        url: self.url,
+        palette: self.palette
       });
     }
   }
 
   self.on('update', function() {
-    if (self.imageUrl) {
-      colorHelper.getImagePaletteByUrl(self.imageUrl, 5, function(palette) {
+    if (self.url) {
+      colorHelper.getImagePaletteByUrl(self.url, 5, function(palette) {
         if (palette === null) {
             return self.update({
-              imageUrl: '',
-              imagePalette: [],
+              url: '',
+              palette: [],
               error: 'Can\'t extract palette from current image.'
             });
         }
-        self.imagePalette = palette;
+        self.palette = palette;
         self.tags['ui-dialog'].tags['image-item'].update({
-          url: self.imageUrl,
-          palette: self.imagePalette
+          url: self.url,
+          palette: self.palette
         });
       });
     }
