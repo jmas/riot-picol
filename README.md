@@ -20,10 +20,6 @@ Run server in development mode.
 ```
 npm run server-dev
 ```
-Optional: Start [localtunnel](http://localtunnel.me/) if you have it already installed.
-```
-npm run lt
-```
 
 # production
 Make `build` folder.
@@ -33,4 +29,10 @@ npm run build
 Run server in production mode.
 ```
 npm run server-prod
+```
+
+# misc
+Start [localtunnel](http://localtunnel.me/) if you have it already installed.
+```
+npm run lt
 ```
