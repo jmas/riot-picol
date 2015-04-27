@@ -7,20 +7,20 @@
     tagger(window.riot);
   }
 })(function(riot) {
-riot.tag('app', '<div class="app"> <div class="app-header"> <div class="app-nav"> <a href="#image" class="{ \'app-nav-item-active\': currentCollection == \'image\' }">Images</a> <a href="#user" class="{ \'app-nav-item-active\': currentCollection == \'user\' }">User</a> </div> </div>  <div class="app-content"> <ui-router></ui-router> </div> </div>', '.app { overflow: hidden; } .app-header { padding: 1em; background-color: #fff; border-bottom: 1px solid #eee; line-height: 1em; } .app-nav { font-weight: bold; } .app-nav a { display: inline-block; padding: .5em; } .app-nav-item-active { color: #444; } .app-side { float: left; width: 20em; margin-right: 2em; } .app-content { overflow: hidden; padding: 1em; }', function(opts) {
+riot.tag('app', '<div class="app"> <div class="app-header"> <div class="app-nav"> <a href="#image" class="{ \'app-nav-item-active\': currentPage == \'image\' }">Images</a> <a href="#user" class="{ \'app-nav-item-active\': currentPage == \'user\' }">User</a> </div> </div> <div class="app-content"> <ui-router></ui-router> </div> </div>', '.app { overflow: hidden; } .app-header { padding: 1em; background-color: #fff; border-bottom: 1px solid #eee; line-height: 1em; } .app-nav { font-weight: bold; } .app-nav a { display: inline-block; padding: .5em; } .app-nav-item-active { color: #444; } .app-side { float: left; width: 20em; margin-right: 2em; } .app-content { overflow: hidden; padding: 1em; }', function(opts) {
   var self = this;
 
-  self.currentCollection = null;
+  self.currentPage = null;
 
-  riot.app.on('route', function(collection, action, id) {
+  riot.app.on('route', function(page, action, id) {
     self.update({
-      currentCollection: collection
+      currentPage: page
     });
   });
   
 });
 
-riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ parent.complete }"> <div class="form-error" if="{ parent.error }">{ parent.error }</div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-item" if="{ parent.imageUrl }"> <image-item url="{ parent.imageUrl }" palette="{ parent.imagePalette }"></image-item> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '/*.form-image-preview { width: 350px; height: 350px; background-position: center; background-repeat: no-repeat; background-size: cover; border: 1px solid #eee; }*/ .form-error { color: red; } .form-image-palette-item { }', function(opts) {
+riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ parent.complete }"> <div class="form-error" if="{ parent.error }">{ parent.error }</div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-item" if="{ parent.imageUrl }"> <image-item url="{ parent.imageUrl }" palette="{ parent.imagePalette }"></image-item> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-error { color: red; }', function(opts) {
   var self = this;
   var colorHelper = require('helpers/color');
 
@@ -82,7 +82,7 @@ riot.tag('image-edit-dialog', '<ui-dialog t="Edit Image"> <form onsubmit="{ pare
   
 });
 
-riot.tag('image-item', '<div class="image-item"> <div class="image-preview"> <img riot-src="{ url }"> </div> <div class="image-palette"> <div each="{ palette }" class="image-palette-item" riot-style="background-color: #{ color }; color: #{ contrastColor };">{ name }</div> </div> </div>', '.image-item { border: 1px solid #eee; background-color: #fff; padding: .5em; border-radius: .25em; } .image-preview { /*width: 360px; height: 360px;*/ background-position: center; background-size: cover; } .image-preview img { width: 100%; } .image-palette-item { height: 2em; line-height: 2em; margin-top: .5em; background-color: #eee; text-align: center; } @media only screen and (min-device-width: 50em) { .image-item { width: 360px; } }', function(opts) {
+riot.tag('image-item', '<div class="image-item"> <div class="image-preview"> <img riot-src="{ url }"> </div> <div class="image-palette"> <div each="{ palette }" class="image-palette-item" riot-style="background-color: #{ color }; color: #{ contrastColor };">{ name }</div> </div> </div>', '.image-item { border: 1px solid #eee; background-color: #fff; padding: .5em; border-radius: .25em; } .image-preview { background-position: center; background-size: cover; } .image-preview img { width: 100%; } .image-palette-item { height: 2em; line-height: 2em; margin-top: .5em; background-color: #eee; text-align: center; } @media only screen and (min-device-width: 50em) { .image-item { width: 360px; } }', function(opts) {
   var self = this;
   var colorHelper = require('helpers/color');
 
@@ -102,18 +102,28 @@ riot.tag('image-item', '<div class="image-item"> <div class="image-preview"> <im
   
 });
 
-riot.tag('image-list', '<div class="image-list-empty" if="{ items.length === 0}"> Empty. </div> <div class="image-list" if="{ items.length > 0 }"> <image-item each="{ items }" url="{ url }" palette="{ palette }"></image-item> </div>', '.image-list { /*overflow: hidden;*/ text-align: center; } .image-list .image-item { display: inline-block; vertical-align: top; margin: 1em; text-align: left; } .image-list-empty { margin-top: 1em; margin-bottom: 1em; padding: 1em; color: #888; border: 1px solid #eee; background-color: #fff; border-radius: .25em; text-align: center; } @media only screen and (max-device-width: 50em) { .image-list .image-item { display: block; } }', function(opts) {
+riot.tag('image-list', '<div class="ui-message" if="{ message }">{ message }</div> <div class="image-list" if="{ items.length > 0 }"> <image-item each="{ items }" url="{ url }" palette="{ palette }"></image-item> </div>', '.image-list { text-align: center; } .image-list .image-item { display: inline-block; vertical-align: top; margin: 1em; text-align: left; } @media only screen and (max-device-width: 50em) { .image-list .image-item { display: block; } }', function(opts) {
   var self = this;
 
+  self.message = null;
   self.items = opts.items || [];
+
+  self.on('update', function() {
+    if (self.items.length === 0) {
+      self.message = 'Empty.';
+    } else {
+      self.message = null;
+    }
+  });
   
 });
 
-riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div class="image-page-error" if="{ error }"> { error } </div> <image-list items="{ items }" if="{ ! error }"></image-list> <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', '.image-page-error { margin-top: 1em; margin-bottom: 1em; padding: 1em; color: red; border: 1px solid red; background-color: #fff; border-radius: .25em; text-align: center; }', function(opts) {
+riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div class="ui-loading" if="{ loading }"></div> <div class="ui-message" if="{ error }">{ error }</div> <div if="{ ! loading && ! error }"> <image-list items="{ items }"></image-list> </div> <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', function(opts) {
   var self = this;
   var imageService = require('services/image');
 
   self.error = null;
+  self.loading = false;
   self.items = opts.items || [];
   self.imageUploadUrl = '/image/upload';
 
@@ -134,26 +144,52 @@ riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div c
   });
 
   self.tags['image-edit-dialog'].on('completed', function(data) {
-    console.log('edit image dialog result: ', data);
-  });
-
-  self.on('mount', function() {
-    imageService.findAll()
-                .then(function(items) {
-                  self.tags['image-list'].update({
-                    items: items
-                  });
+    var dataToSave = {
+      url: data.imageUrl,
+      palette: data.imagePalette
+    };
+    imageService.save(dataToSave)
+                .then(function(item) {
+                  self.items.unshift(item);
+                  self.update();
                 })
                 .catch(function(e) {
                   self.update({
-                    error: 'Can\'t load data from server.'
+                    loading: false,
+                    error: 'Can\'t save image.'
                   });
                 });
+  });
+
+  self.on('update', function() {
+    self.tags['image-list'].update({
+      items: self.items
+    });
+  });
+
+  self.on('mount', function() {
+    riot.route.exec(function(page, action, id) {
+      self.update({ loading: true });
+
+      imageService.findAll()
+                  .then(function(items) {
+                    self.update({
+                      loading: false,
+                      items: items
+                    });
+                  })
+                  .catch(function(e) {
+                    self.update({
+                      loading: false,
+                      error: 'Can\'t load data from server.'
+                    });
+                  });
+    });
   });
   
 });
 
-riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ parent.complete }"> <div class="form-item"> <button class="upload-file-btn">Choose File</button> </div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-image-preview { width: 360px; /*width: auto; height: 350px; background-position: center; background-repeat: no-repeat; background-size: cover; border: 1px solid #eee;*/ } .form-image-preview img { width: 100%; }', function(opts) {
+riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ parent.complete }"> <div class="form-item"> <button class="upload-file-btn">Choose File</button> </div> <div class="form-item" if="{ parent.fileName }"> <div class="form-image-preview"></div> </div> <div class="form-buttons"> <input class="form-submit-btn" type="submit" value="Complete"> </div> </form> </ui-dialog>', '.form-image-preview { width: 360px; } .form-image-preview img { width: 100%; }', function(opts) {
   var self = this;
   var uploader = null;
   var uiHelper = require('helpers/ui');
@@ -186,8 +222,8 @@ riot.tag('image-upload-dialog', '<ui-dialog t="Upload Image"> <form onsubmit="{ 
   }.bind(this);
 
   self.on('updated', function() {
-    if (self.fileName) {
-      var imagePreviewEl = self.root.querySelector('.form-image-preview');
+    var imagePreviewEl = self.root.querySelector('.form-image-preview');
+    if (self.fileName && imagePreviewEl) {
       imagePreviewEl.innerHTML = '<img src="/images/' + self.fileName + '" />';
     }
     if (self.tags['ui-dialog'].showed) {
@@ -258,22 +294,6 @@ riot.tag('ui-dialog', '<div class="dialog" if="{ showed }"> <div class="dialog-o
       riot.app.trigger('dialog:closed');
     }
   }.bind(this);
-
-  this.prevent = function(event) {
-    event.stopPropagation();
-
-
-
-
-
-
-
-
-
-
-
-
-  }.bind(this);
   
 });
 
@@ -287,13 +307,13 @@ riot.tag('ui-router', '', function(opts) {
     riot.route.exec(self.dispatch);
   }.bind(this);
 
-  this.dispatch = function(collection, action, id) {
+  this.dispatch = function(page, action, id) {
 
-    if (! collection) {
+    if (! page) {
       return riot.route(config.defaultRoute);
     }
 
-    var tagName = collection + '-page';
+    var tagName = page + '-page';
     var el = document.createElement(tagName);
     self.root.appendChild(el);
 
@@ -313,8 +333,8 @@ riot.tag('ui-router', '', function(opts) {
     }
 
     if ('app' in riot) {
-      riot.app.trigger('route.' + collection, action, id);
-      riot.app.trigger('route', collection, action, id);
+      riot.app.trigger('route.' + page, action, id);
+      riot.app.trigger('route', page, action, id);
     }
   }.bind(this);
 

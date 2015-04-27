@@ -1,7 +1,5 @@
 <image-list>
-  <div class="image-list-empty" if={ items.length === 0}>
-    Empty.
-  </div>
+  <div class="ui-message" if={ message }>{ message }</div>
 
   <div class="image-list" if={ items.length > 0 }>
     <image-item each={ items } url={ url } palette={ palette }></image-item>
@@ -9,7 +7,6 @@
 
   <style>
   .image-list {
-    /*overflow: hidden;*/
     text-align: center;
   }
 
@@ -18,17 +15,6 @@
     vertical-align: top;
     margin: 1em;
     text-align: left;
-  }
-
-  .image-list-empty {
-    margin-top: 1em;
-    margin-bottom: 1em;
-    padding: 1em;
-    color: #888;
-    border: 1px solid #eee;
-    background-color: #fff;
-    border-radius: .25em;
-    text-align: center;
   }
 
   @media only screen and (max-device-width: 50em) {
@@ -41,6 +27,15 @@
   <script>
   var self = this;
 
+  self.message = null;
   self.items = opts.items || [];
+
+  self.on('update', function() {
+    if (self.items.length === 0) {
+      self.message = 'Empty.';
+    } else {
+      self.message = null;
+    }
+  });
   </script>
 </image-list>

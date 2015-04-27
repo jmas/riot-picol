@@ -2,13 +2,10 @@
   <div class="app">
     <div class="app-header">
       <div class="app-nav">
-        <a href="#image" class={ 'app-nav-item-active': currentCollection == 'image' }>Images</a>
-        <a href="#user" class={ 'app-nav-item-active': currentCollection == 'user' }>User</a>
+        <a href="#image" class={ 'app-nav-item-active': currentPage == 'image' }>Images</a>
+        <a href="#user" class={ 'app-nav-item-active': currentPage == 'user' }>User</a>
       </div>
     </div>
-    <!--<div class="app-side">
-      Sidebar
-    </div>-->
     <div class="app-content">
       <ui-router></ui-router>
     </div>
@@ -54,11 +51,11 @@
   <script>
   var self = this;
 
-  self.currentCollection = null;
+  self.currentPage = null;
 
-  riot.app.on('route', function(collection, action, id) {
+  riot.app.on('route', function(page, action, id) {
     self.update({
-      currentCollection: collection
+      currentPage: page
     });
   });
   </script>

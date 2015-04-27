@@ -9,13 +9,13 @@
     riot.route.exec(self.dispatch);
   }
 
-  dispatch(collection, action, id) {
-    // check collection
-    if (! collection) {
+  dispatch(page, action, id) {
+    // check page
+    if (! page) {
       return riot.route(config.defaultRoute);
     }
     // make new element
-    var tagName = collection + '-page';
+    var tagName = page + '-page';
     var el = document.createElement(tagName);
     self.root.appendChild(el);
     // unmount old pages
@@ -35,8 +35,8 @@
     }
     // trigger global event for notify app components
     if ('app' in riot) {
-      riot.app.trigger('route.' + collection, action, id);
-      riot.app.trigger('route', collection, action, id);
+      riot.app.trigger('route.' + page, action, id);
+      riot.app.trigger('route', page, action, id);
     }
   }
 

@@ -15,21 +15,8 @@
   </ui-dialog>
 
   <style>
-  /*.form-image-preview {
-    width: 350px;
-    height: 350px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border: 1px solid #eee;
-  }*/
-
   .form-error {
     color: red;
-  }
-
-  .form-image-palette-item {
-
   }
   </style>
 

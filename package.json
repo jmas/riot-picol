@@ -1,13 +1,14 @@
 {
-  "name": "Current",
-  "version": "0.0.0",
+  "name": "Picol",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "postinstall": "cd public/ && bower cache clean && bower install && cd ../",
     "watch-tags": "riot -w -m public/tags/ public/tags.js",
     "build": "r.js -o build.js",
-    "start": "nodemon ./bin/www",
-    "start-prod": "NODE_ENV=production nodemon bin/www"
+    "server-dev": "nodemon ./bin/www",
+    "server-prod": "NODE_ENV=production nodemon bin/www",
+    "lt": "lt --port 3000 --subdomain picol"
   },
   "dependencies": {
     "body-parser": "~1.12.0",
@@ -15,6 +16,9 @@
     "debug": "~2.1.1",
     "express": "~4.12.2",
     "jade": "~1.9.2",
+    "js-data": "^1.8.0",
+    "js-data-mongodb": "^0.2.3",
+    "mongodb": "^2.0.28",
     "morgan": "~1.5.1",
     "multer": "^0.1.8",
     "serve-favicon": "~2.2.0"

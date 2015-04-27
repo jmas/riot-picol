@@ -6,5 +6,5 @@ define(['js-data', 'js-data-http'], function() {
   // register and use http by default for async operations
   store.registerAdapter('http', new DSHttpAdapter(), { default: true });
 
-  return store.defineResource('image');
+  return store;
 });

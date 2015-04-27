@@ -1,26 +1,17 @@
 <image-page>
   <button onclick={ addImage }>Add Image</button>
 
-  <div class="image-page-error" if={ error }>
-    { error }
-  </div>
+  <div class="ui-loading" if={ loading }></div>
+  <div class="ui-message" if={ error }>{ error }</div>
 
-  <image-list items={ items } if={ ! error }></image-list>
+  <div if={ ! loading && ! error }>
+    <image-list items={ items }></image-list>
+  </div>
 
   <image-upload-dialog image-upload-url="{ imageUploadUrl }"></image-upload-dialog>
   <image-edit-dialog></image-edit-dialog>
 
   <style>
-  .image-page-error {
-    margin-top: 1em;
-    margin-bottom: 1em;
-    padding: 1em;
-    color: red;
-    border: 1px solid red;
-    background-color: #fff;
-    border-radius: .25em;
-    text-align: center;
-  }
   </style>
 
   <script>
@@ -28,6 +19,7 @@
   var imageService = require('services/image');
 
   self.error = null;
+  self.loading = false;
   self.items = opts.items || [];
   self.imageUploadUrl = '/image/upload';
 
@@ -48,21 +40,47 @@
   });
 
   self.tags['image-edit-dialog'].on('completed', function(data) {
-    console.log('edit image dialog result: ', data);
-  });
-
-  self.on('mount', function() {
-    imageService.findAll()
-                .then(function(items) {
-                  self.tags['image-list'].update({
-                    items: items
-                  });
+    var dataToSave = {
+      url: data.imageUrl,
+      palette: data.imagePalette
+    };
+    imageService.save(dataToSave)
+                .then(function(item) {
+                  self.items.unshift(item);
+                  self.update();
                 })
                 .catch(function(e) {
                   self.update({
-                    error: 'Can\'t load data from server.'
+                    loading: false,
+                    error: 'Can\'t save image.'
                   });
                 });
+  });
+
+  self.on('update', function() {
+    self.tags['image-list'].update({
+      items: self.items
+    });
+  });
+
+  self.on('mount', function() {
+    riot.route.exec(function(page, action, id) {
+      self.update({ loading: true });
+
+      imageService.findAll()
+                  .then(function(items) {
+                    self.update({
+                      loading: false,
+                      items: items
+                    });
+                  })
+                  .catch(function(e) {
+                    self.update({
+                      loading: false,
+                      error: 'Can\'t load data from server.'
+                    });
+                  });
+    });
   });
   </script>
 </image-page>

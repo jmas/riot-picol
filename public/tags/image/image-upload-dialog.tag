@@ -16,12 +16,6 @@
   <style>
   .form-image-preview {
     width: 360px;
-    /*width: auto;
-    height: 350px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border: 1px solid #eee;*/
   }
 
   .form-image-preview img {
@@ -62,8 +56,8 @@
   }
 
   self.on('updated', function() {
-    if (self.fileName) {
-      var imagePreviewEl = self.root.querySelector('.form-image-preview');
+    var imagePreviewEl = self.root.querySelector('.form-image-preview');
+    if (self.fileName && imagePreviewEl) {
       imagePreviewEl.innerHTML = '<img src="/images/' + self.fileName + '" />';
     }
     if (self.tags['ui-dialog'].showed) {

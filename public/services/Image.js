@@ -1,20 +1,25 @@
-define(['stores/image'], function(imageStore) {
-
+define(['repos/image'], function() {
+  var imageRepo = require('repos/image');
+  
   var service = {
     findAll: function() {
-      return imageStore.findAll();
+      return imageRepo.findAll();
     },
     find: function(id) {
-      return imageStore.find();
+      return imageRepo.find(id);
     },
     remove: function(id) {
-      return imageStore.destroy(id);
+      return imageRepo.destroy(id);
     },
     save: function(data) {
-
+      if ('_id' in data) {
+        var id = data._id;
+        delete data._id;
+        return imageRepo.update(id, data);
+      }
+      return imageRepo.create(data);
     }
   };
 
   return service;
-
 });

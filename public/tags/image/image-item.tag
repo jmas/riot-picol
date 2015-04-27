@@ -17,8 +17,6 @@
   }
 
   .image-preview {
-    /*width: 360px;
-    height: 360px;*/
     background-position: center;
     background-size: cover;
   }

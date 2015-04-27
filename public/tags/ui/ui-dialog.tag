@@ -98,21 +98,5 @@
       riot.app.trigger('dialog:closed');
     }
   }
-
-  prevent(event) {
-    event.stopPropagation();
-    // console.log(self.root);
-    // self.root.addEventListener('touchmove', function(event){
-    //     event.stopPropagation();
-    // });
-    // var dialogEl = self.root;
-    // var preventScrollHandler = function(e) {
-    //   e.stopPropagation();
-    //   e.preventDefault();
-    // };
-    // //
-    // dialogEl.addEventListener('touchmove', preventScrollHandler);
-    // dialogEl.addEventListener('touchstart', preventScrollHandler);
-  }
   </script>
 </ui-dialog>

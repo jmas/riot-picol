@@ -2,7 +2,7 @@
 
   // requirejs config
   requirejs.config({
-    urlArgs: "bust=" + (new Date()).getTime(),
+    // urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
       // core components
       riot:                 './bower_components/riot/riot.min',
