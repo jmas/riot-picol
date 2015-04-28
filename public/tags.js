@@ -118,28 +118,52 @@ riot.tag('image-list', '<div class="ui-message" if="{ message }">{ message }</di
   
 });
 
-riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div class="ui-loading" if="{ loading }"></div> <div class="ui-message" if="{ error }">{ error }</div> <div if="{ ! loading && ! error }"> <image-list items="{ items }"></image-list> </div> <image-upload-dialog upload-url="{ uploadUrl }"></image-upload-dialog> <image-edit-dialog></image-edit-dialog>', function(opts) {
+riot.tag('image-page', '<button class="upload-file-btn" >Add Image</button> <div class="ui-loading" if="{ loading }"></div> <div class="ui-message" if="{ error }">{ error }</div> <div if="{ ! loading && ! error }"> <image-list items="{ items }"></image-list> </div>  <image-edit-dialog></image-edit-dialog>', function(opts) {
   var self = this;
   var imageService = require('services/image');
+  var uiHelper = require('helpers/ui');
   var config = require('config');
+  var uploader = null;
 
   self.error = null;
   self.loading = false;
+  self.inProgress = false;
   self.items = opts.items || [];
   self.uploadUrl = config.imageUploadUrl || '/image/upload';
 
-  this.addImage = function() {
-    self.uploadImage();
+
+
+
+
+
+
+
+  this.initUploader = function() {
+    uploader = new uiHelper.FileUploader({
+      button: self.root.querySelector('.upload-file-btn'),
+      url: self.uploadUrl,
+      multipart: true,
+      responseType: 'json',
+
+      onComplete: function(filename, response, uploadBtn) {
+        self.tags['image-edit-dialog'].open({
+          url: response.result.url
+        });
+        self.update({
+          inProgress: false
+        });
+      },
+      onSubmit: function() {
+        self.update({
+          inProgress: true
+        });
+      },
+      name: 'file'
+    });
   }.bind(this);
 
-  this.uploadImage = function() {
-    self.tags['image-upload-dialog'].open();
-    riot.app.trigger('image:upload');
-  }.bind(this);
 
-  self.tags['image-upload-dialog'].on('completed', function(data) {
-    self.tags['image-edit-dialog'].open(data);
-  });
+
 
   self.tags['image-edit-dialog'].on('completed', function(data) {
     imageService.save(data)
@@ -162,6 +186,8 @@ riot.tag('image-page', '<button onclick="{ addImage }">Add Image</button> <div c
   });
 
   self.on('mount', function() {
+    self.initUploader();
+
     riot.route.exec(function(page, action, id) {
       self.update({ loading: true });
 
