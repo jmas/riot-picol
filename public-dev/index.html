@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta charset="utf-8" />
+    <title>Picol</title>
+    <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: #fafafa;
+    }
+
+    img {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    a {
+      text-decoration: none;
+      color: blue;
+    }
+
+    .ui-dialog-opened {
+      overflow: hidden;
+    }
+
+    .ui-loading:before {
+      content: "Loading...";
+      color: #888;
+    }
+
+    .ui-message {
+      margin-top: 1em;
+      margin-bottom: 1em;
+      padding: 1em;
+      color: #888;
+      border: 1px solid #eee;
+      background-color: #fff;
+      border-radius: .25em;
+      text-align: center;
+    }
+
+    .ui-form-item {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    .ui-form-error {
+      padding: 1em;
+      border: 1px solid red;
+      color: red;
+      background-color: #fff;
+      border-radius: .25em;
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    .ui-form-buttons {
+      padding-top: 1em;
+      border-top: 1px solid #eee;
+      margin-top: 1em;
+    }
+
+    .ui-form-image-preview {
+
+    }
+
+    .ui-form-image-preview {
+      width: 360px;
+    }
+
+    .ui-form-image-preview img {
+      width: 100%;
+    }
+
+    .ui-nav {
+      padding: 1em;
+    }
+    </style>
+  </head>
+  <body>
+
+    <app></app>
+
+    <script src="bower_components/requirejs/require.js" data-main="main"></script>
+  </body>
+</html>

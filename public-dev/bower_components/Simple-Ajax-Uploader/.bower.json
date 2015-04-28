@@ -1,0 +1,14 @@
+{
+  "name": "Simple-Ajax-Uploader",
+  "homepage": "https://github.com/jmas/Simple-Ajax-Uploader",
+  "_release": "92cec868e8",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "92cec868e8dcb0ce517c81cbe7150e855900a2a3"
+  },
+  "_source": "https://github.com/jmas/Simple-Ajax-Uploader.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/jmas/Simple-Ajax-Uploader.git",
+  "_direct": true
+}

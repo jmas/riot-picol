@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "postinstall": "cd public/ && bower cache clean && bower install && cd ../",
-    "watch-tags": "riot -w -m public/tags/ public/tags.js",
+    "watch-tags": "riot -w -m public-dev/tags/ public-dev/tags.js",
     "build": "r.js -o build.js",
-    "minify-build": "minify build/main.js > build/main.min.js",
+    "minify-build": "minify public-prod/main.js > public-prod/main.min.js",
     "server-dev": "nodemon ./bin/www",
     "server-prod": "NODE_ENV=production nodemon bin/www",
     "lt": "lt --port 3000"

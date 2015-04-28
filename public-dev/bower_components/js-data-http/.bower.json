@@ -1,0 +1,44 @@
+{
+  "name": "js-data-http",
+  "description": "http adapter for js-data.",
+  "homepage": "http://www.js-data.io/docs/dshttpadapter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/js-data/js-data-http.git"
+  },
+  "author": {
+    "name": "Jason Dobry",
+    "url": "http://www.pseudobry.com",
+    "email": "jason.dobry@gmail.com"
+  },
+  "main": "./dist/js-data-http.js",
+  "ignore": [
+    ".idea/",
+    ".*",
+    "*.iml",
+    "src/",
+    "lib/",
+    "doc/",
+    "guide/",
+    "coverage/",
+    "Gruntfile.js",
+    "node_modules/",
+    "test/",
+    "package.json",
+    "karma.conf.js",
+    "karma.start.js"
+  ],
+  "dependencies": {
+    "js-data": ">=1.1.0"
+  },
+  "version": "1.2.3",
+  "_release": "1.2.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.2.3",
+    "commit": "e40c65ba7cb16e0e789379ddc6a2e273bbcc61a2"
+  },
+  "_source": "git://github.com/js-data/js-data-http.git",
+  "_target": "~1.2.3",
+  "_originalSource": "js-data-http"
+}

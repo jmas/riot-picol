@@ -2,17 +2,17 @@
 
     // Define our base URL - all module paths are relative to this
     // base directory.
-    baseUrl: "./public",
+    baseUrl: "./public-dev",
 
     // Define our build directory. All files in the base URL will be
     // COPIED OVER into the build directory as part of the
     // concatentation and optimization process. You should use this
     // so you don't override your raw source files.
-    dir: "./build",
+    dir: "./public-prod",
 
     // Load the RequireJS config() definition from the main.js file.
     // Otherwise, we'd have to redefine all of our paths again here.
-    mainConfigFile: "./public/main.js",
+    mainConfigFile: "./public-dev/main.js",
     removeCombined: true,
     findNestedDependencies: true,
     wrapShim: true,

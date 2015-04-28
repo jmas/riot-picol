@@ -1,6 +1,6 @@
-public/uploads/*
+uploads/*
 node_modules/*
 public/bower_components/*
 public/build.js
-build/*
+public-prod/*
 *.log

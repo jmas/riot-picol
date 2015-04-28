@@ -4,24 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var compression = require('compression');
+var config = require('./config');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var multer = require('multer');
-var compression = require('compression');
-
-var config = require('./config');
+var image = require('./routes/image');
 
 var app = express();
 
-console.log('Current env: ', app.get('env'));
-
-var publicDirName = config.devPublicDirName;
-
 // production
 if (app.get('env') === 'production') {
-  publicDirName = config.prodPublicDirName;
-
   // compression
   app.use(compression({
     filter: function shouldCompress(req, res) {
@@ -36,12 +29,7 @@ if (app.get('env') === 'production') {
   }));
 }
 
-app.use(multer({
-  dest: path.join(__dirname, publicDirName, config.imagesUplodsPath),
-  rename: function (fieldname, filename) {
-    return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
-  }
-}))
+var publicDirName = (app.get('env') === 'production' ? 'public-prod': 'public-dev');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -57,6 +45,9 @@ app.use(express.static(path.join(__dirname, publicDirName)));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/image', image);
+
+app.use('/image', express.static(path.join(__dirname, config.imagesUplodsPath)));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
